@@ -32,3 +32,6 @@ depend:
 		(LC_ALL=C; export LC_ALL; makedepend -Y -- $(CFLAGS) $(DFLAGS) -- *.c)
 
 # DO NOT DELETE
+
+data.o: t-sne.h kseq.h
+main.o: t-sne.h
