@@ -13,11 +13,12 @@ KSTREAM_INIT(gzFile, gzread, 16384)
 KSTREAM_INIT(int, read, 16384)
 #endif
 
-float **sann_data_read(const char *fn, int *n_, int *n_col_, char ***row_names, char ***col_names)
+float **sann_data_read(const char *fn, int *n_, unsigned long *n_col_, char ***row_names, char ***col_names)
 {
 	kstream_t *ks;
 	float **x = 0;
-	int n = 0, m = 0, dret, n_col = 0;
+	int dret;
+	unsigned long n = 0, m = 0, n_col = 0;
 	kstring_t str = {0,0,0};
 
 #ifdef HAVE_ZLIB
@@ -31,7 +32,7 @@ float **sann_data_read(const char *fn, int *n_, int *n_col_, char ***row_names, 
 	if (row_names) *row_names = 0;
 	if (col_names) *col_names = 0;
 	while (ks_getuntil(ks, KS_SEP_LINE, &str, &dret) >= 0) {
-		int st, i, k;
+		unsigned long st, i, k;
 		if (str.s[0] == '#' && col_names) {
 			for (i = k = 0; i < str.l; ++i)
 				if (str.s[i] == '\t') ++k;
@@ -83,11 +84,12 @@ float **sann_data_read(const char *fn, int *n_, int *n_col_, char ***row_names, 
 	return x;
 }
 
-double *sann_data_read_1d(const char *fn, int *n, int *n_col, char ***row_names, char ***col_names)
+// double *sann_data_read_1d(const char *fn, int *n, int *n_col, char ***row_names, char ***col_names)
+double *sann_data_read_1d(const char *fn, int *n, unsigned long *n_col, char ***row_names, char ***col_names)
 {
 	float **x;
 	double *z;
-	int i, j, k;
+	unsigned long i, j, k;
 	x = sann_data_read(fn, n, n_col, row_names, col_names);
 	z = (double*)malloc((*n) * (*n_col) * sizeof(double));
 	for (i = k = 0; i < *n; ++i) {
